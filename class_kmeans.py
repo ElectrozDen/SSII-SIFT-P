@@ -24,10 +24,10 @@ detectors = {'sift': cv2.xfeatures2d.SIFT_create, 'surf': cv2.xfeatures2d.SURF_c
 if sys.argv[1] == 'train':
     detector = None
     detector = detectors.get(sys.argv[2])()
-    im = ImagesManager('./images', detector)
+    im = ImagesManager(sys.argv[3], detector)
     print('---First Kmeans---')
-    kmeans1 = KMeans(n_clusters=int(sys.argv[3]), random_state=0).fit(im.__get_all_descriptors__())
-    im.__compute_bows__(kmeans1, int(sys.argv[3]), True)
+    kmeans1 = KMeans(n_clusters=int(sys.argv[4]), random_state=0).fit(im.__get_all_descriptors__())
+    im.__compute_bows__(kmeans1, int(sys.argv[4]), True)
     print('---Second Kmeans---')
     kmeans2 = KMeans(n_clusters=2, random_state=0).fit(im.__get_bows__())
     print('---Results---')
@@ -49,7 +49,7 @@ else:
     file.close()
     detector = None
     detector = detectors.get(sys.argv[2])
-    im = ImagesManager('./old_image', detector())
+    im = ImagesManager(sys.argv[3], detector())
     print('---Predict with First Kmeans---')
     data = kmeans1.predict(im.__get_all_descriptors__())
     im.__compute_bows__(data, len(kmeans1.cluster_centers_), False)
